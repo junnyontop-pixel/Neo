@@ -114,6 +114,14 @@ Neo 코드는 @Script 블록과 @ID:Tag UI 블록으로 나뉩니다.
 | **`Style`** | 요소의 CSS 스타일을 정의합니다. 각 속성은 세미콜론(`;`)으로 구분합니다. | `Style(key: value; key: value; ...)` |
 | **`Event`** | 클릭, 입력 등 브라우저 이벤트를 정의하고 실행할 로직을 작성합니다. | `Event(click: action)` |
 
+```neo
+@MyButton:button {
+    Innerhtml: "클릭 횟수: $count"
+    Style(background-color: #4CAF50; color: white; padding: 10px)
+    Event(click: $count++)
+}
+```
+
 ---
 
 ## 🏗 Directory Structure (권장 구조)
