@@ -48,3 +48,31 @@ export default defineConfig({
 ```
 
 2. `index.html`설정
+
+프로젝트 루트의 index.html에서 프레임워크를 초기화합니다.
+
+```html
+<div id="app"></div>
+
+<script type="module">
+  import { NeoCore } from './node_modules/@junnyontop-pixel/neo-app/core/NeoCore.js';
+  import render from './src/App.js'; // 컴파일러가 생성한 JS 파일
+
+  // 초기 상태 정의
+  const state = { count: 0 };
+
+  // 프레임워크 인스턴스 생성 및 마운트
+  const neo = new NeoCore(state, render, 'app');
+  neo.mount();
+</script>
+```
+
+---
+
+## 📝 Syntax & Usage (문법 및 사용법)
+
+Neo Framework는 **HTML보다 간결**하고 직관적인 전용 문법을 제공합니다.
+
+1. 태그 및 아이디(ID) 선언
+
+태그 이름 뒤에 `#`을 붙여 ID를 지정합니다. 중첩 구조를 지원합니다.
