@@ -72,7 +72,63 @@ export default defineConfig({
 ## 📝 Syntax & Usage (문법 및 사용법)
 
 Neo Framework는 **HTML보다 간결**하고 직관적인 전용 문법을 제공합니다.
+Neo 코드는 @Script 블록과 @ID:Tag UI 블록으로 나뉩니다.
 
-1. 태그 및 아이디(ID) 선언
+1. 로직 정의 (@Script)
 
-태그 이름 뒤에 `#`을 붙여 ID를 지정합니다. 중첩 구조를 지원합니다.
+**데이터 상태와 함수를 정의**하는 영역입니다.
+
+```neo
+@Script {
+    let count = 0;
+}
+```
+
+2. UI 요소 구조 (@ID:Tag)
+
+`@객체명:태그명` 형식을 사용하여 요소를 선언하며, 하위에 `Innerhtml`, `Style`, `Event`를 정의합니다.
+
+```neo
+@App:div {
+    Innerhtml: "Neo 프레임워크에 오신 것을 환영합니다!"
+    Style(background-color: white; padding: 20px)
+    
+    @Counter:h1 {
+        Innerhtml: "현재 수치: $count"
+        Style(color: royalblue; font-size: 24px)
+    }
+
+    @Btn:button {
+        Innerhtml: "증가시키기"
+        Style(padding: 10px 20px; cursor: pointer)
+        Event(click: count++)
+    }
+}
+```
+
+3. 주요 예약어 설명
+
+| 예약어 | 설명 | 사용 형식 |
+| :--- | :--- | :--- |
+| **`Innerhtml`** | 태그 내부의 텍스트를 정의하며, `$변수명`을 통해 상태 데이터를 바인딩합니다. | `Innerhtml: "텍스트 또는 $변수"` |
+| **`Style`** | 요소의 CSS 스타일을 정의합니다. 각 속성은 세미콜론(`;`)으로 구분합니다. | `Style(key: value; key: value; ...)` |
+| **`Event`** | 클릭, 입력 등 브라우저 이벤트를 정의하고 실행할 로직을 작성합니다. | `Event(click: action)` |
+
+---
+
+## 🏗 Directory Structure (권장 구조)
+
+```text
+project-root/
+├── node_modules/
+├── src/
+│   ├── App.neo      <-- Neo 문법으로 UI 설계
+│   └── App.js       <-- 저장 시 자동 생성됨
+├── index.html
+└── vite.config.js
+```
+
+---
+
+## 📄 License
+MIT License
