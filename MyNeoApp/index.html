@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <div id="app"></div>
+    <script type="module">
+        import { NeoCore } from './core/NeoCore.js';
+        import render from './src/App.js'; // 컴파일러가 만든 결과물!
+
+        const state = { count: 0, name: "NeoVGC" };
+        const neo = new NeoCore(state, render, 'app');
+        neo.mount();
+
+        // 버튼 클릭 이벤트 (임시 연결)
+        document.addEventListener('click', (e) => {
+            if(e.target.id === 'Btn') neo.state.count++;
+        });
+    </script>
+</body>
+</html>

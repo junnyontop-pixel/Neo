@@ -1,0 +1,10 @@
+@Script {
+    function sayHello() {
+        alert("안녕하세요!");
+    }
+}
+
+@Btn:button {
+    Innerhtml: "인사하기";
+    Event( click: sayHello() )
+}
