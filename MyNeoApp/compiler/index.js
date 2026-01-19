@@ -1,61 +1,67 @@
 #!/usr/bin/env node
 import fs from 'fs';
-import path from 'path'; // 경로 처리를 위해 추가
+import path from 'path';
 import { NeoParser } from './NeoParser.js';
 
+// 1. 입력 파일 경로 확인
 const inputFile = process.argv[2];
 
-// 인자가 없을 경우 에러 처리
 if (!inputFile) {
-    console.error("❌ 컴파일할 .neo 파일을 입력해주세요. (예: node index.js App.neo)");
+    console.error("❌ 컴파일할 .neo 파일을 입력해주세요. (예: npx neoc src/App.neo)");
     process.exit(1);
 }
 
-const source = fs.readFileSync(inputFile, 'utf8');
-const { root, scriptContent } = NeoParser.parse(source);
+// 2. 소스 코드 읽기 및 파싱
+try {
+    const source = fs.readFileSync(inputFile, 'utf8');
+    const { root, scriptContent } = NeoParser.parse(source);
 
-function generateCode(node) {
-    const childrenCode = node.children.map(child => generateCode(child)).join(', ');
-    
-    const eventProps = {};
-    for (const [evt, action] of Object.entries(node.events)) {
-        const propName = `on${evt.charAt(0).toUpperCase() + evt.slice(1)}`;
-        
-        let processedAction = action;
-        if (action.includes('++')) processedAction = `state.${action}`;
-        
-        if (processedAction.includes('(') && !processedAction.includes(')')) {
-            processedAction += ')';
-        }
-
-        eventProps[propName] = `() => { ${processedAction} }`; 
+    if (!root) {
+        throw new Error("파싱 결과가 비어있습니다. .neo 파일의 형식을 확인해주세요.");
     }
 
-    const eventString = Object.entries(eventProps)
-        .map(([k, v]) => `${k}: ${v}`)
-        .join(', ');
+    // 3. 코드 생성 함수 (재귀 구조)
+    function generateCode(node, indent = "    ") {
+    const childrenCode = node.children
+        .map(child => generateCode(child, indent + "    "))
+        .join(',\n');
 
-    return `h('${node.tag}', {
-        id: '${node.id}',
-        style: ${JSON.stringify(node.styles)},
-        innerHtml: \`${node.innerHtml.replace(/\$(\w+)/g, '${state.$1}')}\`${eventString ? ', ' + eventString : ''}
-    }, [${childrenCode}])`;
+    // 이벤트들을 객체 문자열로 변환
+    const eventProps = Object.entries(node.events).map(([evt, action]) => {
+        const propName = `on${evt.charAt(0).toUpperCase() + evt.slice(1)}`;
+        // $count -> state.count로 치환
+        let processedAction = action.replace(/\$(\w+)/g, 'state.$1');
+        return `${propName}: () => { ${processedAction} }`;
+    }).join(`,\n${indent}        `);
+
+    return `${indent}h('${node.tag}', {
+${indent}    id: '${node.id}',
+${indent}    style: ${JSON.stringify(node.styles)},
+${indent}    innerHTML: \`${node.innerHtml.replace(/\$(\w+)/g, '${state.$1}')}\`${eventProps ? ',\n' + indent + '    ' + eventProps : ''}
+${indent}}, [${childrenCode ? '\n' + childrenCode + '\n' + indent : ''}])`;
 }
 
-// compiler/index.js 내부
+// render 함수 생성 부분
 const finalJS = `
-import { h } from './node_modules/@junnyontop-pixel/neo-app/core/NeoCore.js';
-
-// [User Script]
-${scriptContent}
+import { h } from '@junnyontop-pixel/neo-app/core/NeoCore.js';
 
 export default function render(state) {
-    return ${generateCode(root)};
+    // 값이 없을 때만 초기화 (중요: 매번 0으로 덮어쓰지 않음)
+    if (state.count === undefined) state.count = 0;
+    if (state.title === undefined) state.title = "hello, neo";
+
+    return ${generateCode(root).trimStart()};
 }
 `.trim();
 
-// 파일 생성 위치를 입력 파일과 동일한 위치의 .js로 지정
-const outputPath = inputFile.replace('.neo', '.js');
-fs.writeFileSync(outputPath, finalJS);
+    // 5. .js 파일로 저장
+    const outputPath = inputFile.replace('.neo', '.js');
+    fs.writeFileSync(outputPath, finalJS);
 
-console.log(`✅ [컴파일 완료] -> ${outputPath}`);
+    console.log(`✅ [컴파일 성공] -> ${outputPath}`);
+
+} catch (err) {
+    console.error("❌ 컴파일 중 에러 발생:");
+    console.error(err.message);
+    process.exit(1);
+}
