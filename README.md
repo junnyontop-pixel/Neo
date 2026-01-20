@@ -47,25 +47,19 @@ export default defineConfig({
 });
 ```
 
-2. `index.html`설정
+2. 추가 설정
 
-프로젝트 루트의 index.html에서 프레임워크를 초기화합니다.
-
-```html
-<div id="app"></div>
-
-<script type="module">
-  import { NeoCore } from './node_modules/@junnyontop-pixel/neo-app/core/NeoCore.js';
-  import render from './src/App.js'; // 컴파일러가 생성한 JS 파일
-
-  // 초기 상태 정의
-  const state = { count: 0 };
-
-  // 프레임워크 인스턴스 생성 및 마운트
-  const neo = new NeoCore(state, render, 'app');
-  neo.mount();
-</script>
+```bash
+npx neoc-init
 ```
+명령어를 사용하여 프로젝트를 초기화하세요.
+
+프로젝트 루트에 생긴 src폴더 안의 App.neo파일을 수정하고
+
+```bash
+npx neoc src/App.neo
+```
+명령어를 사용해 컴파일하세요.
 
 ---
 
@@ -90,16 +84,16 @@ Neo 코드는 @Script 블록과 @ID:Tag UI 블록으로 나뉩니다.
 
 ```neo
 @App:div {
-    Innerhtml: "Neo 프레임워크에 오신 것을 환영합니다!"
+    innerHTML: "Neo 프레임워크에 오신 것을 환영합니다!"
     Style(background-color: white; padding: 20px)
     
     @Counter:h1 {
-        Innerhtml: "현재 수치: $count"
+        innerHTML : "현재 수치: $count"
         Style(color: royalblue; font-size: 24px)
     }
 
     @Btn:button {
-        Innerhtml: "증가시키기"
+        innerHTML : "증가시키기"
         Style(padding: 10px 20px; cursor: pointer)
         Event(click: count++)
     }
@@ -116,7 +110,7 @@ Neo 코드는 @Script 블록과 @ID:Tag UI 블록으로 나뉩니다.
 
 ```neo
 @MyButton:button {
-    Innerhtml: "클릭 횟수: $count"
+    innerHtml: "클릭 횟수: $count"
     Style(background-color: #4CAF50; color: white; padding: 10px)
     Event(click: $count++)
 }
@@ -129,9 +123,9 @@ Neo 코드는 @Script 블록과 @ID:Tag UI 블록으로 나뉩니다.
 ```text
 project-root/
 ├── node_modules/
-├── src/
-│   ├── App.neo      <-- Neo 문법으로 UI 설계
-│   └── App.js       <-- 저장 시 자동 생성됨
+├── src/           <-- 건들이지 말고 명령어사용
+│   ├── App.neo     
+│   └── App.js
 ├── index.html
 └── vite.config.js
 ```
