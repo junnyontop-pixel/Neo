@@ -27,10 +27,10 @@ export function h(tag, props, children = []) {
     if (props.style) Object.assign(el.style, props.style);
     
     // 컴파일러가 주는 innerHTML과 파서가 주는 innerHtml 모두 대응
-    const content = props.innerHTML || props.innerHtml;
-    if (content !== undefined) {
-        el.innerHTML = content;
-    }
+    // const content = props.innerHTML || props.innerHtml;
+    // if (content !== undefined) {
+    //     el.innerHTML = content;
+    // }
 
     Object.keys(props).forEach(key => {
         if (key.startsWith('on') && typeof props[key] === 'function') {

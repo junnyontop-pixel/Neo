@@ -6,9 +6,10 @@ export default function render(state) {
     if (state.title === undefined) state.title = "hello, neo";
 
     return h('button', {
-        id: 'Btn',
-        style: {},
-        innerHTML: `인사하기`,
+                id: 'Btn',
+                style: {},
         onClick: () => { sayHello( }
-    }, []);
+            }, [
+`인사하기`
+    ]);
 }
