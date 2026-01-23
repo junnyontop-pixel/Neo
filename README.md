@@ -136,3 +136,9 @@ project-root/
 
 ## 📄 License
 MIT License
+
+---
+## 현재 상태
+
+>현재 유지보수가 불가능하다고 판단,
+더 새로운,간결한,쉬운 Neojs v2로 돌아오겠습니다.
