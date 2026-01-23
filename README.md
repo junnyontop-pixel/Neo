@@ -11,7 +11,7 @@
 NPM을 통해 프로젝트에 간편하게 설치할 수 있습니다.
 
 ```bash
-npm install @junnyontop-pixel/neo-app@1.1.17
+npm install @junnyontop-pixel/neo-app@1.2.1
 ```
 
 ---
