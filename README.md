@@ -124,8 +124,8 @@ Neo 코드는 @Script 블록과 @ID:Tag UI 블록으로 나뉩니다.
 
 ```text
 project-root/
-├── node_modules/
-├── src/           <-- 건들이지 말고 명령어사용
+├── node_modules/  <-- 건들이지 말고 명령어사용
+├── src/          
 │   ├── App.neo     
 │   └── App.js
 ├── index.html
